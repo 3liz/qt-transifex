@@ -1,0 +1,5 @@
+[qt-transifex]
+plugin_source = "qt_transifex_testing"
+organization = "3liz-1"
+project = "qt_transifex_testing"
+repository_url = "https://github.com/3liz/qt-transifex"

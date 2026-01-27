@@ -1,0 +1,139 @@
+[build-system]
+requires = ["uv_build>=0.8.19,<0.9.0"]
+build-backend = "uv_build"
+
+[project]
+name = "qt-transifex"
+version = "0.1.0"
+authors = [
+    {name = "David Marteau", email = "david.marteau@3liz.com"},
+]
+description = "Handle transifex translation in Qt resources"
+requires-python = ">=3.12"
+keywords = ["Qt", "CI", "transifex", "i18n"]
+license = {text = "GPLv3"}
+classifiers = [
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: System Administrators",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Information Technology",
+        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: Implementation :: CPython",
+]
+dependencies = [
+    "click",
+    "pydantic",
+    "six",      # Required by transifex
+    "transifex-python>=3.2,<4.0",
+]
+
+[project.scripts]
+qt-transifex = "qt_transifex.main:main"
+
+[project.urls]
+homepage = "https://github.com/3liz/qt-transifex"
+documentation = "https://github.com/3liz/qt-transifex"
+repository = "https://github.com/3liz/qt-transifex"
+tracker = "https://github.com/3liz/qt-transifex"
+
+
+[project.optional-dependencies]
+
+[dependency-groups]
+dev = [
+    "coverage[toml]",
+    {include-group = "tests"},
+    {include-group = "lint" },
+]
+tests = [
+    "pytest",
+]
+lint = [
+    "ruff",
+    "mypy",
+    "bandit",
+    "types-requests",
+]
+
+[tool.uv.build-backend]
+module-name = ["qt_transifex"]
+module-root = ""
+
+#
+# Ruff
+#
+# https://doc.astral.sh/ruff/configuration
+#
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+exclude = [
+    ".venv",
+    ".local",
+    "tests/fixtures",
+]
+
+[tool.ruff.format]
+indent-style = "space"
+
+[tool.ruff.lint]
+extend-select = ["E", "F", "I", "ANN", "W", "T", "COM", "RUF"]
+# COM812 conflict with formatter
+ignore = [
+    "ANN002",
+    "ANN003",
+    "ANN204",
+    "ANN401",
+    "T201",
+    "COM812",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"test/*" = [
+    "ANN201",
+]
+
+[tool.ruff.lint.isort]
+lines-between-types = 1
+order-by-type = true
+
+[tool.ruff.lint.flake8-annotations]
+ignore-fully-untyped = true
+suppress-none-returning = true
+suppress-dummy-args = true
+
+#
+# Mypy
+#
+[tool.mypy]
+python_version = "3.12"
+exclude = [
+    "^tests/fixtures/*$",
+]
+
+[[tool.mypy.overrides]]
+module = [
+    "transifex.*",
+]
+ignore_missing_imports = true
+
+
+#
+# Coverage
+#
+[tool.coverage.run]
+source = ["qt_transifex"]
+branch = true
+relative_files = true
+
+[tool.coverage.report]
+precision = 2
+exclude_lines = [
+    "if TYPE_CHECKING",
+    '\(Protocol\):$',
+]
