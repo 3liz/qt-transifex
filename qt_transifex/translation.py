@@ -18,7 +18,6 @@ from .parameters import Parameters
 
 
 class Translation:
-
     @classmethod
     def translation_file_path(cls, parameters: Parameters) -> Path:
         return parameters.plugin_path.joinpath(
@@ -69,7 +68,7 @@ class Translation:
         if not resource:
             raise TranslationError(f"Resource {self._ts_name} does not exists")
 
-        languages = set(lang.code for lang in self._project.languages())
+        languages = {lang.code for lang in self._project.languages()}
         logger.info("%s languages found for '%s'", len(languages), resource)
 
         if selected_languages:
@@ -78,7 +77,7 @@ class Translation:
         if self._minimum_tr is not None:
             # Retrieve language statistics
             stats = ((code, ratio) for (code, _, ratio) in self._project.language_stats(self._ts_name))
-            candidates = set(code for code, ratio in stats if code in languages and ratio >= self._minimum_tr)
+            candidates = {code for code, ratio in stats if code in languages and ratio >= self._minimum_tr}
             languages = candidates
 
         # Ensure that the directory exists
@@ -121,9 +120,7 @@ class Translation:
             fh.write("CODECFORTR = UTF-8\n")
             fh.write(f"SOURCES = {py_sources}\n")
             fh.write(f"FORMS = {ui_sources}\n")
-            fh.write(
-                f"TRANSLATIONS = {ts_path}\n"
-            )
+            fh.write(f"TRANSLATIONS = {ts_path}\n")
 
         cmd = [
             str(parameters.pylupdate5_executable),
@@ -136,9 +133,7 @@ class Translation:
         rv = subprocess.run(cmd, text=True, capture_output=True)
         if rv.returncode != 0:
             raise TranslationError(
-                f"pylupdate5 command failed with return code {rv.returncode}\n"
-                f"{rv.stdout}"
-                f"{rv.stderr}"
+                f"pylupdate5 command failed with return code {rv.returncode}\n{rv.stdout}{rv.stderr}"
             )
 
         logger.info("%s\n%s", rv.stdout, rv.stderr)
@@ -166,7 +161,5 @@ class Translation:
         rv = subprocess.run(cmd, text=True, capture_output=True)
         if rv.returncode != 0:
             raise TranslationError(
-                f"lrelease command failed with return code {rv.returncode}\n"
-                f"{rv.stdout}"
-                f"{rv.stderr}"
+                f"lrelease command failed with return code {rv.returncode}\n{rv.stdout}{rv.stderr}"
             )

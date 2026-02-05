@@ -1,4 +1,3 @@
-
 from pathlib import Path
 from typing import (
     Iterator,
@@ -32,9 +31,7 @@ class Resource:
         """Fetch the translation resource matching the given language"""
         language = tx_api.Language.get(code=lang)
 
-        url = tx_api.ResourceTranslationsAsyncDownload.download(
-            resource=self._res, language=language
-        )
+        url = tx_api.ResourceTranslationsAsyncDownload.download(resource=self._res, language=language)
 
         r = requests.get(url)
         # Transifex returns None encoding and the apparent_encoding is Windows-1254
@@ -89,17 +86,11 @@ class Project:
 
         for st in tx_api.ResourceLanguageStats.filter(project=self._proj, resource=res):
             _, _, code = st.id.partition(":l:")
-            if st.total_strings > 0:
-                ratio = 100.0 * (st.translated_strings / st.total_strings)
-            else:
-                ratio = 0.
+            ratio = 100.0 * (st.translated_strings / st.total_strings) if st.total_strings > 0 else 0.0
             yield (code, st.total_strings, ratio)
 
     def add_languages(self, *languages: str):
-        self._proj.add(
-            "languages",
-            [lang for code in languages if (lang := tx_api.Language.get(code=code))]
-        )
+        self._proj.add("languages", [lang for code in languages if (lang := tx_api.Language.get(code=code))])
 
 
 class Client:

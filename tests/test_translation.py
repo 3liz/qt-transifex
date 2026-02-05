@@ -1,4 +1,3 @@
-
 from contextlib import chdir
 from pathlib import Path
 
@@ -14,7 +13,6 @@ def test_update_strings(fixtures: Path):
     pro_file = parameters.plugin_path.joinpath(f"{parameters.project}.pro")
 
     with chdir(fixtures):
-
         ts_path.unlink(missing_ok=True)
         qm_path.unlink(missing_ok=True)
         pro_file.unlink(missing_ok=True)

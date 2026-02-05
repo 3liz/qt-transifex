@@ -48,7 +48,7 @@ class Parameters(BaseModel, extra="forbid"):
         description="""
         The project's name on Transifex.
         Usually this is the same as the Github's project slug.
-        """
+        """,
     )
     resource: str = Field(
         title="Transifex resource",
@@ -63,7 +63,7 @@ class Parameters(BaseModel, extra="forbid"):
     lrelease_executable: FilePath = Field(
         default=Path(shutil.which("lrelease") or "lrelease"),
         validate_default=True,
-        title="lrelease executable"
+        title="lrelease executable",
     )
     pylupdate5_executable: FilePath = Field(
         default=Path(shutil.which("pylupdate5") or "pylupdate5"),

@@ -112,14 +112,18 @@ def list_languages(transifex_token: str, json_format: bool):
     )
     if json_format:
         import json
+
         click.echo(
             json.dumps(
-                [{
-                    "code": lang.code,
-                    "name": lang.name,
-                    "strings": stat[0],
-                    "ratio": stat[1],
-                } for lang, stat in languages],
+                [
+                    {
+                        "code": lang.code,
+                        "name": lang.name,
+                        "strings": stat[0],
+                        "ratio": stat[1],
+                    }
+                    for lang, stat in languages
+                ],
                 indent=4,
             ),
         )

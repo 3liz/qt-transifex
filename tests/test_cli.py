@@ -28,7 +28,7 @@ def test_cli_push(fixtures: Path):
 def test_cli_pull(fixtures: Path):
     with chdir(fixtures):
         runner = CliRunner()
-        result = runner.invoke(cli, ["-vv", "pull"])
+        result = runner.invoke(cli, ["-vv", "pull", "--dry-run"])
 
         print("\n::test_cli_pull::", result.output)
 
